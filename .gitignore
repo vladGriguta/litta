@@ -1,0 +1,38 @@
+dataset
+
+
+# logs
+tensorboard/train
+events*
+*.h5
+
+
+# labelImg
+labelImg/resources/icons/.DS_Store
+
+labelImg/resources.py
+
+.idea*
+labelImg.egg-info*
+
+*.pyc
+.*.swp
+
+build/
+dist/
+
+tags
+cscope*
+.ycm_extra_conf.py
+.subvimrc
+.vscode
+*.pkl
+
+# MacOS System-Generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
