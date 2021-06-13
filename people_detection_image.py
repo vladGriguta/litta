@@ -11,20 +11,16 @@ import numpy as np
 import time
 
 import tensorflow as tf
+devices = tf.config.experimental.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(devices[0], True)
 
-def get_session():
-    config = tf.compat.v1.ConfigProto()
-    config.gpu_options.allow_growth = True
-    return tf.compat.v1.Session(config=config)
-
-keras.backend.tensorflow_backend.set_session(get_session())
-
-model_path = 'C:\\Users\\Samjith.CP\\Desktop\\test.h5'    ## replace this with your model path
+model_path = 'snapshots/resnet50_csv_13.h5'    ## replace this with your model path
 model = models.load_model(model_path, backbone_name='resnet50')
-labels_to_names = {0: 'person'}                    ## replace with your model labels and its index value
+labels_to_names = {0: 'litter'}                    ## replace with your model labels and its index value
 
-image_path = 'C:\\Users\\Samjith.CP\\Desktop\\first_terrorist_detect\\dataset\\images\\4.jpg'  ## replace with input image path
-output_path = 'C:\\Users\\Samjith.CP\\Desktop\\detected_image.jpg'   ## replace with output image path
+images = os.listdir("dataset/sorted/images/")
+image_path = os.path.join("dataset/sorted/images/", np.random.choice(images)) ## replace with input image path
+output_path = 'output/detected_image.jpg'   ## replace with output image path
 
 def detection_on_image(image_path):
 
@@ -33,7 +29,12 @@ def detection_on_image(image_path):
         draw = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = preprocess_image(image)
         image, scale = resize_image(image)
-        boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+        out = model.predict_on_batch(np.expand_dims(image, axis=0))
+        if len(labels_to_names) > 1:
+            boxes, scores, labels = out
+        else:
+            boxes, scores = out
+            labels = [labels_to_names[0] for _ in range(scores.shape[1])]
         boxes /= scale
         for box, score, label in zip(boxes[0], scores[0], labels[0]):
 
