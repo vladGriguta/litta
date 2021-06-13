@@ -24,6 +24,9 @@ import warnings
 from tensorflow import keras
 import tensorflow as tf
 
+devices = tf.config.experimental.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(devices[0], True)
+
 # Allow relative imports when being executed as script.
 if __name__ == "__main__" and __package__ is None:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))

@@ -5,6 +5,7 @@ from imutils import paths
 import argparse
 import random
 import os
+import yaml
 
 # Construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -18,6 +19,8 @@ ap.add_argument("-e", "--test", default=config.TEST_CSV,
 	help="path to output test CSV file")
 ap.add_argument("-c", "--classes", default=config.CLASSES_CSV,
 	help="path to output classes CSV file")
+ap.add_argument("-cm", "--class_map", default=config.CLASS_MAP,
+	help="path to input class mapping YML file")
 ap.add_argument("-s", "--split", type=float, default=config.TRAIN_TEST_SPLIT,
 	help="train and test split")
 args = vars(ap.parse_args())
@@ -27,6 +30,7 @@ annot_path = args["annotations"]
 images_path = args["images"]
 train_csv = args["train"]
 test_csv = args["test"]
+class_map = args["class_map"]
 classes_csv = args["classes"]
 train_test_split = args["split"]
 
@@ -36,6 +40,12 @@ random.shuffle(imagePaths)
 i = int(len(imagePaths) * train_test_split)
 trainImagePaths = imagePaths[:i]
 testImagePaths = imagePaths[i:]
+
+# grab label mapping
+label_map = None
+if os.path.isfile(class_map):
+    with open(class_map, "r") as f:
+        label_map = yaml.load(f)
 
 # create the list of datasets to build
 dataset = [ ("train", trainImagePaths, train_csv),
@@ -72,6 +82,8 @@ for (dType, imagePaths, outputCSV) in dataset:
         for o in soup.find_all("object"):
             #extract the label and bounding box coordinates
             label = o.find("name").string
+            if label_map:
+                label = label_map[label]
             xMin = int(float(o.find("xmin").string))
             yMin = int(float(o.find("ymin").string))
             xMax = int(float(o.find("xmax").string))

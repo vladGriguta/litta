@@ -9,3 +9,5 @@ opencv-python>=3.3.0
 pillow
 progressbar2
 tensorflow==2.4.1
+bs4
+imutils

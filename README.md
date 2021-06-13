@@ -53,6 +53,11 @@ or
 After each epoch, the model will be saved in the snapshots folder. Stop the training by using 'ctr+c' when the loss will be minimum.
 
 
+## Debug
+Example of call to debug the annotated images.
+```console
+python keras_retinanet/bin/debug.py --show-annotations --anchors csv dataset/sorted/train.csv dataset/sorted/classes.csv
+```
 
 ## Convert Model
 

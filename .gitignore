@@ -1,5 +1,6 @@
-dataset
-
+dataset/LitterImages
+dataset/sorted
+venv
 
 # logs
 tensorboard/train
